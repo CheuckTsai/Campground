@@ -1,32 +1,32 @@
-<header class="sticky">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">YelpCamp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/campgrounds">Campgrounds</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/campgrounds/new">New Campground</a>
-                    </li>
-                </ul>
-                <div class="navbar-nav ml-auto">
-                    <% if(!currentUser) {%>
-                        <a href="/login" class="nav-link">Login</a>
-                        <a href="/register" class="nav-link">Register</a>
-                        <% } else { %>
-                            <a href="/logout" class="nav-link">Logout</a>
-                            <% } %>
-                </div>
+<link rel="stylesheet" href="/stylesheets/app.css">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <div class="navbar-brand">YelpCamp</div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/campgrounds">Campgrounds</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/campgrounds/new">New Campground</a>
+                </li>
+            </ul>
+            
+            <div class="navbar-nav ml-auto">
+                <% if(!currentUser) {%>
+                    <a href="/login" class="nav-link">Login</a>
+                    <a href="/register" class="nav-link">Register</a>
+                    <% } else { %>
+                        <a href="/logout" class="nav-link">Logout</a>
+                        <% } %>
             </div>
         </div>
-    </nav>
-</header>
+    </div>
+</nav>

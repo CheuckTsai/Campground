@@ -1,19 +1,19 @@
 <% layout('layouts/boilerplate')%>
 
     <body>
-        <h1 class="mb-3">All campgrounds</h1>
-        <div><a class="btn btn-sm btn-primary" href="/campgrounds/new"><strong>Add your own campground now!</strong></a></div>
+        <card class="text-center"><strong><h1 class="mb-3">All campgrounds</h1></strong></card>
+        <p class="lead text-center"> Find out your nearest campground to start your trip today!</p>
         <div id='cluster-map' style="width:100%; height:400px"></div>
-        <p></p>
+        <div><a class="btn btn-sm btn-primary mb-3" href="/campgrounds/new"><strong>Add your own campground now!</strong></a></div>
         <% for (let campground of campgrounds){ %>
             <div class="card mb-3">
                 <div class="row">
                     <div class="col-md-4">
                         <% if(campground.images.length) {%>
-                            <img src="<%= campground.images[0].url%>" class="img-fluid rounded">
+                            <img src="<%= campground.images[0].url%>" class="img-round img-fluid">
                             <% } else {%>
                                 <img src="https://res.cloudinary.com/tsai-li/image/upload/v1629878136/YelpCamp/w3tntwopgfwxuzgpkhkd.jpg"
-                                    class="img-fluid rounded">
+                                    class="img-round img-fluid">
                                 <% } %>
                     </div>
                     <div class="col-md-8">
@@ -25,7 +25,7 @@
                                 <%= campground.location%>
                             </small>
                             <p class="card-text">
-                                <%= campground.description%>
+                                <%= campground.description.substring(0, 190)%>...
                             </p>
                             <a class="btn btn-sm btn-primary" href="/campgrounds/<%= campground._id%>">View more about <%=
                                     campground.title%></a>
@@ -34,10 +34,12 @@
                 </div>
             </div>
             <% } %>
-    </body>
+    
 
     <script>
         const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
         const campgrounds = { features: <%-JSON.stringify(campgrounds)%>}
     </script>
     <script src='/javascripts/clusterMap.js'></script>
+
+</body>
