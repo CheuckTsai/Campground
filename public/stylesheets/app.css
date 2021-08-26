@@ -91,3 +91,8 @@ card.mb-3.text-center>h2 {
 .card.shadow > .card-title{
     font-size: 20px;
 }
+
+footer.stick-footer {
+    position: fixed;
+    text-align: center;
+}
