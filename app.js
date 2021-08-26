@@ -1,20 +1,37 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
+
 const express = require('express');
+const helmet = require("helmet");
+
 
 const path = require('path');
 const mongoose = require('mongoose');
 
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+
+const mongoSanitize = require('express-mongo-sanitize');
+
+const userRoutes = require('./routes/users');
 
 
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
 
-//27017: default port
-mongoose.connect('mongodb://localhost:27017/yelpCamp', {
+//process.env.DB_URL
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelpCamp';
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -37,11 +54,27 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+    })
+);
 
+const secret = process.env.SECRET || 'hellosecret';
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'tsai'
+    }
+});
 
 const sessionConfig = {
-    secret: 'hellosecret',
+    store,
+    name: 'session',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -51,18 +84,38 @@ const sessionConfig = {
     }
 }
 
-
+// flash implements
 app.use(session(sessionConfig));
 app.use(flash());
 
+// passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: '...@gmail.com', username: 'abcd' })
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
+
+})
+
 app.use((req, res, next) => {
+    if (!['/login', '/'].includes(req.originalUrl)) {
+        req.session.returnTo = req.originalUrl;
+    }
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 
 app.get('/', (req, res) => {
