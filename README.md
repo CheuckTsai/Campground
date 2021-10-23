@@ -1,5 +1,7 @@
 # TsaiCamp
-## Full-Stack Personal Project
+
+**Full-Stack Personal Project**
+
 <https://tsai-camp2021.herokuapp.com/>
 
 * Employed **JavaScript** and **Express** with **Node.js** to build a full-stack website to explore campgrounds from lists and cluster maps, allowed users to log in and upload reviews with self-built authentication middleware based on **Passport.js**
